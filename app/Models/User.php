@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nama_seksi',
+        'group',
+        'role',
+        'is_admin',
+        'area_id',
     ];
 
     /**
@@ -42,4 +47,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function sicLaporan()
+    {
+        return $this->hasMany(SafetyObservation::class, 'sic_id');
+    }
+    public function area()
+{
+    return $this->belongsTo(Area::class);
+}
 }

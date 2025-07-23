@@ -23,8 +23,6 @@ return new class extends Migration
             $table->string('judul_temuan');
             $table->string('kategori');
             $table->string('jenis_temuan');
-            $table->string('metode');
-            $table->string('alat_fasilitas');
             $table->string('bukti_gambar')->nullable();
             $table->timestamps();
         });

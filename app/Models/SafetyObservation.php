@@ -19,8 +19,22 @@ class SafetyObservation extends Model
         'judul_temuan',
         'kategori',
         'jenis_temuan',
-        'metode',
-        'alat_fasilitas',
-        'bukti_gambar',
+        'sub_metode',
+        'sub_alat',
+        'sub_apd',
+        'sub_5s',
+        'sub_posisi',
+        'situasi',
+        'tindakan',
+        'bukti_gambar'
     ];
+
+    public function sic()
+    {
+        return $this->belongsTo(User::class, 'sic_id');
+    }
+    public function area()
+{
+    return $this->belongsTo(Area::class);
+}
 }
