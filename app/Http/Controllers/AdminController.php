@@ -127,39 +127,58 @@ public function tabel(Request $request)
 {
     // Inisialisasi query untuk ongoing dan closed secara terpisah
     $ongoingQuery = SafetyObservation::query()
-        ->whereIn('status', ['open', 'on_progress', 'pending']);
+        ->whereIn('status', ['waiting','open', 'on_progress', 'pending']);
 
     $closedQuery = SafetyObservation::query()
         ->where('status', 'closed');
 
-    // Filtering global (berlaku untuk kedua kategori)
-    if ($request->filled('nama')) {
-        $ongoingQuery->where('nama', 'like', '%' . $request->nama . '%');
-        $closedQuery->where('nama', 'like', '%' . $request->nama . '%');
+    // Filtering ongoing
+    if ($request->filled('nama_ongoing')) {
+        $ongoingQuery->where('nama', 'like', '%' . $request->nama_ongoing . '%');
     }
 
-    if ($request->filled('nama_seksi')) {
-        $ongoingQuery->where('nama_seksi', 'like', '%' . $request->nama_seksi . '%');
-        $closedQuery->where('nama_seksi', 'like', '%' . $request->nama_seksi . '%');
+    if ($request->filled('nama_seksi_ongoing')) {
+        $ongoingQuery->where('nama_seksi', 'like', '%' . $request->nama_seksi_ongoing . '%');
     }
 
-    if ($request->filled('lokasi_observasi')) {
-        $ongoingQuery->where('lokasi_observasi', 'like', '%' . $request->lokasi_observasi . '%');
-        $closedQuery->where('lokasi_observasi', 'like', '%' . $request->lokasi_observasi . '%');
+    if ($request->filled('lokasi_observasi_ongoing')) {
+        $ongoingQuery->where('lokasi_observasi', 'like', '%' . $request->lokasi_observasi_ongoing . '%');
     }
 
-    if ($request->filled('tanggal_pelaporan')) {
-        $ongoingQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan);
-        $closedQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan);
+    if ($request->filled('tanggal_pelaporan_ongoing')) {
+        $ongoingQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan_ongoing);
     }
 
-    if ($request->filled('status')) {
-        $ongoingQuery->where('status', $request->status); // ini hanya aktif jika user set status filter jadi open/on_progress/pending
+    if ($request->filled('kategori_ongoing')) {
+        $ongoingQuery->where('kategori', $request->kategori_ongoing);
+    }
+
+    if ($request->filled('status_ongoing')) {
+        $ongoingQuery->where('status', $request->status_ongoing); // ini hanya aktif jika user set status filter jadi open/on_progress/pending
+    }
+    //fillter closed
+    if ($request->filled('nama_closed')) {
+        $closedQuery->where('nama', 'like', '%' . $request->nama_closed. '%');
+    }
+    if ($request->filled('nama_seksi_closed')) {
+        $closedQuery->where('nama_seksi', 'like', '%' . $request->nama_seksi_closed . '%');
+    }
+    if ($request->filled('lokasi_observasi_closed')) {
+        $closedQuery->where('lokasi_observasi', 'like', '%' . $request->lokasi_observasi_closed . '%');
+    }
+    if ($request->filled('kategori_closed')) {
+        $closedQuery->where('kategori', 'like', '%' . $request->kategori_closed . '%');
+    }
+    if ($request->filled('tanggal_pelaporan_closed')) {
+        $closedQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan_closed);
+    }
+    if ($request->filled('status_closed')) {
+        $ongoingQuery->where('status', $request->status_closed); // ini hanya aktif jika user set status filter jadi open/on_progress/pending
     }
 
     // Eksekusi query
-    $ongoing = $ongoingQuery->latest()->paginate(10)->withQueryString();
-    $closed = $closedQuery->latest()->paginate(10)->withQueryString();
+    $ongoing = $ongoingQuery->latest()->paginate(5,['*'],'ongoing_page')->withQueryString();
+    $closed = $closedQuery->latest()->paginate(5,['*'],'closed_page')->withQueryString();
 
     return view('admin.tabel', compact('ongoing', 'closed'));
 }

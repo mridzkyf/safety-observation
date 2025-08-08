@@ -4,7 +4,13 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SafetyObservationController;
 use App\Http\Controllers\ApproverController;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\AdminController;
+use App\Exports\SafetyObservationExport;
+use App\Http\Controllers\ExportController;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
+
 
 
 Route::get('/', function () {
@@ -61,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/approver/dashboard', [ApproverController::class, 'index'])->name('approver.dashboard');
     Route::get('/approver/temuan', [ApproverController::class, 'temuanSeksi'])->name('approver.temuan');
-    Route::get('/approver/terlapor', [ApproverController::class, 'laporanTerlapor'])->name('approver.terlapor');
+    // Route::get('/approver/terlapor', [ApproverController::class, 'laporanTerlapor'])->name('approver.terlapor');
     //tabel berdasarkan seksi
     Route::get('/approver/temuan', [ApproverController::class, 'temuanSeksi'])->name('approver.temuan');
     Route::get('/approver/temuan/{id}', [ApproverController::class, 'show'])->name('approver.temuan.detail');
@@ -88,4 +94,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+//untuk chart 
+Route::get('/chart/data/pie', [ChartController::class, 'pieData']);
+Route::get('/chart/data/pieStatus', [ChartController::class, 'pieDataStatus']);
+Route::get('/chart/data/bar-area', [ChartController::class, 'barByAreaData']);
+Route::get('/chart/data/pie-seksi', [ChartController::class, 'pieSeksiData']);
+Route::get('/analisis/pie', [ChartController::class, 'pieView'])->name('analisis.pie');
+
+//untuk export data Excel
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/export-so', [ExportController::class, 'exportAdmin'])->name('admin.export.so');
+
+    Route::get('/manager/export-so', [ExportController::class, 'exportManagerPelapor'])->name('manager.export.so');
+
+    Route::get('/manager/export-terlapor', [ExportController::class, 'exportManagerTerlapor'])->name('manager.export.terlapor');
+});
 require __DIR__.'/auth.php';

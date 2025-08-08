@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Area;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
+
 class RegisteredUserController extends Controller
 {
     /**
@@ -20,7 +22,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+      $areas = Area::all(); // Ambil semua area sebagai daftar seksi
+      return view('auth.register', compact('areas'));
     }
 
     /**
@@ -37,6 +40,9 @@ class RegisteredUserController extends Controller
             'nama_seksi' => ['required', 'string'],
             'group' => ['required', 'in:DAY TIME,GROUP A,GROUP B,GROUP C,GROUP D'],
         ]);
+    // Cari ID area berdasarkan nama seksi
+    $area = Area::where('name', $request->nama_seksi)->first();
+    $areaId = $area ? $area->id : null;
 
         $user = User::create([
             'name' => $request->name,
@@ -44,6 +50,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'nama_seksi' => $request->nama_seksi,
             'group' => $request->group,
+            'area_id' => $areaId, // otomatis diisi berdasarkan nama seksi
             'is_admin' => 0, //semua yang register jadi admin.
         ]);
 

@@ -43,40 +43,57 @@ public function laporanSaya(Request $request)
 {
     $user = Auth::user();
 
+    //Queery untuk menampilkan satu seksi 
+
+    $areaId = auth()->user()->area_id;
+
     // Query dasar berdasarkan email user
     $ongoingQuery = SafetyObservation::where('email', $user->email)
-        ->whereIn('status', ['open', 'on_progress', 'pending']);
+        ->whereIn('status', ['open', 'on_progress', 'pending', 'waiting']);
 
     $closedQuery = SafetyObservation::where('email', $user->email)
         ->where('status', 'closed');
 
-    // Filtering berlaku untuk keduanya
-    if ($request->filled('tanggal_pelaporan')) {
-        $ongoingQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan);
-        $closedQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan);
+    // Query data ke area user (laporan ke seksi dia)
+    $terlaporQuery = SafetyObservation::where('area_id', $areaId)->where('email', '!=', $user->email);
+
+    // Filtering ongoing
+    if ($request->filled('tanggal_pelaporan_ongoing')) {
+        $ongoingQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan_ongoing);
     }
 
-    if ($request->filled('judul_temuan')) {
-        $ongoingQuery->where('judul_temuan', 'like', '%' . $request->judul_temuan . '%');
-        $closedQuery->where('judul_temuan', 'like', '%' . $request->judul_temuan . '%');
+    if ($request->filled('judul_temuan_ongoing')) {
+        $ongoingQuery->where('judul_temuan', 'like', '%' . $request->judul_temuan_ongoing . '%');
     }
 
-    if ($request->filled('kategori')) {
-        $ongoingQuery->where('kategori', 'like', '%' . $request->kategori . '%');
-        $closedQuery->where('kategori', 'like', '%' . $request->kategori . '%');
+    if ($request->filled('kategori_ongoing')) {
+        $ongoingQuery->where('kategori', 'like', '%' . $request->kategori_ongoing . '%');
     }
 
-    if ($request->filled('status')) {
+    if ($request->filled('status_ongoing')) {
         // Jika user filter status khusus (misal hanya ingin lihat "open")
         // Maka override filter bawaan
-        $ongoingQuery->where('status', $request->status);
+        $ongoingQuery->where('status', $request->status_ongoing);
     }
 
-    // Eksekusi paginasi
-    $ongoing = $ongoingQuery->latest()->paginate(10)->withQueryString();
-    $closed = $closedQuery->latest()->paginate(10)->withQueryString();
+    // Filltering Closed
+    if ($request->filled('tanggal_pelaporan_closed')) {
+        $closedQuery->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan_closed);
+    }
+    if ($request->filled('judul_temuan_closed')) {
+        $closedQuery->where('judul_temuan', 'like', '%' . $request->judul_temuan_closed . '%');
+    }
+    if ($request->filled('kategori_closed')) {
+        $closedQuery->where('kategori', 'like', '%' . $request->kategori_closed . '%');
+    }
 
-    return view('user.laporan', compact('ongoing', 'closed'));
+
+    // Eksekusi paginasi
+    $ongoing = $ongoingQuery->latest()->paginate(5,['*'],'on_progress')->withQueryString();
+    $closed = $closedQuery->latest()->paginate(5,['*'],'history')->withQueryString();
+    $terlapor = $terlaporQuery->latest()->paginate(5,['*'],'history_section')->withQueryString();
+
+    return view('user.laporan', compact('ongoing', 'closed','terlapor'));
 }
 
 

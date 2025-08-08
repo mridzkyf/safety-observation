@@ -48,29 +48,11 @@
                                     placeholder="Konfirmasi Password" required>
                             </div>
                             <div class="mb-3">
-                                <select name="nama_seksi" class="form-select form-control-lg" required>
-                                    <option value="">-- Pilih Nama Seksi --</option>
-                                    <option value="ADM">ADM</option>
-                                    <option value="Account & Tax">Account & Tax</option>
-                                    <option value="CA">CA</option>
-                                    <option value="EI">EI</option>
-                                    <option value="ENG PET">ENG PET</option>
-                                    <option value="FT">FT</option>
-                                    <option value="IFB">IFB</option>
-                                    <option value="IFC">IFC</option>
-                                    <option value="IT">IT</option>
-                                    <option value="KTF">KTF</option>
-                                    <option value="LOG">LOG</option>
-                                    <option value="MC">MC</option>
-                                    <option value="MFG PET">MFG PET</option>
-                                    <option value="MKF PF">MKF PF</option>
-                                    <option value="Material Purchasing">Material Purchasing</option>
-                                    <option value="QA & CTS KTF - PF">QA & CTS KTF - PF</option>
-                                    <option value="QC KTF - PF">QC KTF - PF</option>
-                                    <option value="QQC PET">QQC PET</option>
-                                    <option value="SHE">SHE</option>
-                                    <option value="TC">TC</option>
-                                    <!-- tambahkan seksi lainnya -->
+                                <select name="nama_seksi" class="form-select" required>
+                                    <option value="">-- Pilih Seksi --</option>
+                                    @foreach ($areas as $area)
+                                        <option value="{{ $area->name }}">{{ $area->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="mb-3 text-start">

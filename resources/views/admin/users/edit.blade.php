@@ -78,11 +78,12 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="area_id" class="form-label">Area Kerja</label>
+                    <label for="area_id" class="form-label">Area Kerja old</label>
                     <select name="area_id" id="area_id" class="form-select" required>
                         <option value="">-- Pilih Area --</option>
                         @foreach ($areas as $area)
-                            <option value="{{ $area->id }}" {{ $user->area_id == $area->id ? 'selected' : '' }}>
+                            <option value="{{ $area->id }}"
+                                {{ strval(old('area_id', $user->area_id)) === strval($area->id) ? 'selected' : '' }}>
                                 {{ $area->name }}
                             </option>
                         @endforeach

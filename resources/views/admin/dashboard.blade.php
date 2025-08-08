@@ -38,7 +38,7 @@
         <div class="dashboard-card">
             <img src="{{ asset('argon/img/ANALISIS.png') }}" alt="Analysis Icon">
             <h4>Analisis Temuan</h4>
-            <a href="#" class="dashboard-button disabled">
+            <a href="{{ route('analisis.pie') }}" class="dashboard-button">
                 Buka Analisis <i class="fas fa-arrow-right"></i>
             </a>
         </div>

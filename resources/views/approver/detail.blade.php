@@ -132,7 +132,8 @@
         @else
             <p class="text-muted"><em>Tidak ada gambar</em></p>
         @endif
-        {{-- saya nambahin nya disini --}}
+
+        {{-- untuk penunjukan SIC --}}
         @if (auth()->user()->role === 'officer' || auth()->user()->role === 'supervisor' || auth()->user()->role === 'manager')
             @if ($observation->status === 'waiting' && !$observation->sic_id)
                 <form method="POST" action="{{ route('approver.approve', $observation->id) }}">

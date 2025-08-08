@@ -106,33 +106,52 @@
 
         <!-- ONGOING SECTION -->
         <div class="table-container">
-            <h3 style="color:#032E3D; font-weight:bold;">Daftar Safety Observation (Sedang Diproses)</h3>
+            <h3 style="color:#032E3D; font-weight:bold;">Daftar Safety Observation All Section (Sedang Diproses)</h3>
 
             <form method="GET" action="{{ route('admin.tabel') }}" class="mb-3">
                 <div class="row g-2">
                     <div class="col-md">
-                        <input type="date" name="tanggal_pelaporan" class="form-control form-control-sm"
-                            value="{{ request('tanggal_pelaporan') }}">
+                        <input type="date" name="tanggal_pelaporan_ongoing" class="form-control form-control-sm"
+                            value="{{ request('tanggal_pelaporan_ongoing') }}">
                     </div>
                     <div class="col-md">
-                        <input type="text" name="nama" class="form-control form-control-sm"
-                            placeholder="Nama Pelapor" value="{{ request('nama') }}">
+                        <input type="text" name="nama_ongoing" class="form-control form-control-sm"
+                            placeholder="Nama Pelapor" value="{{ request('nama_ongoing') }}">
                     </div>
                     <div class="col-md">
-                        <input type="text" name="nama_seksi" class="form-control form-control-sm" placeholder="Seksi"
-                            value="{{ request('nama_seksi') }}">
+                        <input type="text" name="nama_seksi_ongoing" class="form-control form-control-sm"
+                            placeholder="Seksi" value="{{ request('nama_seksi_ongoing') }}">
                     </div>
                     <div class="col-md">
-                        <input type="text" name="lokasi_observasi" class="form-control form-control-sm"
-                            placeholder="Lokasi" value="{{ request('lokasi_observasi') }}">
+                        <select name="kategori_ongoing" class="form-select form-select-sm">
+                            <option value="">Katergori</option>
+                            <option value="Unsafe Condition"
+                                {{ request('kategori_ongoing') == 'Unsafe Condition' ? 'selected' : '' }}>
+                                Unsafe Condition
+                            </option>
+                            <option value="Unsafe Act"
+                                {{ request('kategori_ongoing') == 'Unsafe Act' ? 'selected' : '' }}>
+                                Unsafe Action
+                            </option>
+                        </select>
                     </div>
                     <div class="col-md">
-                        <select name="status" class="form-select form-select-sm">
-                            <option value="">Semua</option>
-                            <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>Open</option>
-                            <option value="on_progress" {{ request('status') == 'on_progress' ? 'selected' : '' }}>On
+                        <input type="text" name="lokasi_observasi_ongoing" class="form-control form-control-sm"
+                            placeholder="Lokasi" value="{{ request('lokasi_observasi_ongoing') }}">
+                    </div>
+                    <div class="col-md">
+                        <select name="status_ongoing" class="form-select form-select-sm">
+                            <option value="">Status</option>
+                            <option value="waiting" {{ request('status_ongoing') == 'waiting' ? 'selected' : '' }}>
+                                Waiting
+                            </option>
+                            <option value="open" {{ request('status_ongoing') == 'open' ? 'selected' : '' }}>Open
+                            </option>
+                            <option value="on_progress"
+                                {{ request('status_ongoing') == 'on_progress' ? 'selected' : '' }}>On
                                 Progress</option>
-                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
+                            <option value="pending" {{ request('status_ongoing') == 'pending' ? 'selected' : '' }}>
+                                Pending
                             </option>
                         </select>
                     </div>
@@ -152,6 +171,7 @@
                             <th>Nama Pelapor</th>
                             <th>Nama Seksi</th>
                             <th>Judul Temuan</th>
+                            <th>Kategori</th>
                             <th>Lokasi Observasi</th>
                             <th>Status</th>
                             <th>Detail</th>
@@ -165,6 +185,7 @@
                                 <td>{{ $item->nama }}</td>
                                 <td>{{ $item->nama_seksi }}</td>
                                 <td>{{ $item->judul_temuan }}</td>
+                                <td>{{ $item->kategori }}</td>
                                 <td>{{ $item->lokasi_observasi }}</td>
                                 <td>
                                     @php
@@ -189,16 +210,21 @@
                                         class="button-detail">Lihat Detail</a>
                                 </td>
                                 <td>
-                                    <form action="{{ route('approver.terlapor.update', $item->id) }}" method="POST">
-                                        @csrf
-                                        <select name="status" class="form-select" required>
-                                            <option value="">Pilih</option>
-                                            <option value="on_progress">On Progress</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="closed">Closed</option>
-                                        </select>
-                                        <button type="submit" class="btn btn-sm btn-primary mt-1">Update</button>
-                                    </form>
+                                    @if ($item->status !== 'waiting')
+                                        <form action="{{ route('approver.terlapor.update', $item->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            <select name="status" class="form-select" required>
+                                                <option value="">Pilih</option>
+                                                <option value="on_progress">On Progress</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="closed">Closed</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary mt-1">Update</button>
+                                        </form>
+                                    @else
+                                        <span class="text-muted small">Belum dapat diubah</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -223,35 +249,38 @@
 
         <!-- CLOSED SECTION -->
         <div class="table-container">
-            <h3 style="color:#032E3D; font-weight:bold;">Riwayat Safety Observation</h3>
+            <h3 style="color:#032E3D; font-weight:bold;">Riwayat Safety Observation All Section</h3>
 
             <form method="GET" action="{{ route('admin.tabel') }}" class="mb-3">
                 <div class="row g-2">
                     <div class="col-md">
-                        <input type="date" name="tanggal_pelaporan" class="form-control form-control-sm"
-                            value="{{ request('tanggal_pelaporan') }}">
+                        <input type="date" name="tanggal_pelaporan_closed" class="form-control form-control-sm"
+                            value="{{ request('tanggal_pelaporan_closed') }}">
                     </div>
                     <div class="col-md">
-                        <input type="text" name="nama" class="form-control form-control-sm"
-                            placeholder="Nama Pelapor" value="{{ request('nama') }}">
+                        <input type="text" name="nama_closed" class="form-control form-control-sm"
+                            placeholder="Nama Pelapor" value="{{ request('nama_closed') }}">
                     </div>
                     <div class="col-md">
-                        <input type="text" name="nama_seksi" class="form-control form-control-sm" placeholder="Seksi"
-                            value="{{ request('nama_seksi') }}">
+                        <input type="text" name="nama_seksi_closed" class="form-control form-control-sm"
+                            placeholder="Seksi" value="{{ request('nama_seksi_closed') }}">
                     </div>
                     <div class="col-md">
-                        <input type="text" name="lokasi_observasi" class="form-control form-control-sm"
-                            placeholder="Lokasi" value="{{ request('lokasi_observasi') }}">
-                    </div>
-                    <div class="col-md">
-                        <select name="status" class="form-select form-select-sm">
-                            <option value="">Semua</option>
-                            <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>Open</option>
-                            <option value="on_progress" {{ request('status') == 'on_progress' ? 'selected' : '' }}>On
-                                Progress</option>
-                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
+                        <select name="kategori_closed" class="form-select form-select-sm">
+                            <option value="">Katergori</option>
+                            <option value="Unsafe Condition"
+                                {{ request('kategori_closed') == 'Unsafe Condition' ? 'selected' : '' }}>
+                                Unsafe Condition
+                            </option>
+                            <option value="Unsafe Act"
+                                {{ request('kategori_closed') == 'Unsafe Act' ? 'selected' : '' }}>
+                                Unsafe Action
                             </option>
                         </select>
+                    </div>
+                    <div class="col-md">
+                        <input type="text" name="lokasi_observasi_closed" class="form-control form-control-sm"
+                            placeholder="Lokasi" value="{{ request('lokasi_observasi_closed') }}">
                     </div>
                     <div class="col-md-auto">
                         <button type="submit" class="btn btn-sm btn-info w-100">
@@ -269,6 +298,7 @@
                             <th>Nama Pelapor</th>
                             <th>Nama Seksi</th>
                             <th>Judul Temuan</th>
+                            <th>Kategori</th>
                             <th>Lokasi Observasi</th>
                             <th>Status</th>
                             <th>Detail</th>
@@ -281,6 +311,7 @@
                                 <td>{{ $item->nama }}</td>
                                 <td>{{ $item->nama_seksi }}</td>
                                 <td>{{ $item->judul_temuan }}</td>
+                                <td>{{ $item->kategori }}</td>
                                 <td>{{ $item->lokasi_observasi }}</td>
                                 <td>
                                     <span
@@ -312,7 +343,65 @@
                 </div>
             </div>
         </div>
+        <div class="table-container">
+            <h3 style="color:#032E3D; font-weight:bold;">Export Data Safety Observation</h3>
+            <form action="{{ route('admin.export.so') }}" method="GET"
+                class="d-flex align-items-center gap-2 mb-4">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <select name="mode" id="filterMode" class="form-control" required>
+                    <option value="all">Semua Data</option>
+                    <option value="single">Per Tanggal</option>
+                    <option value="range">Range Tanggal</option>
+                </select>
+
+                <input type="date" name="date" id="singleDate" class="form-control d-none">
+                <input type="date" name="start_date" id="startDate" class="form-control d-none">
+                <input type="date" name="end_date" id="endDate" class="form-control d-none">
+
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </button>
+            </form>
+        </div>
     </div>
 </body>
+<script>
+    const modeSelect = document.getElementById('filterMode');
+    const singleDate = document.getElementById('singleDate');
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+
+    function updateDateInputs() {
+        let mode = modeSelect.value;
+
+        singleDate.classList.add('d-none');
+        singleDate.required = false;
+        startDate.classList.add('d-none');
+        startDate.required = false;
+        endDate.classList.add('d-none');
+        endDate.required = false;
+
+        if (mode === 'single') {
+            singleDate.classList.remove('d-none');
+            singleDate.required = true;
+        } else if (mode === 'range') {
+            startDate.classList.remove('d-none');
+            endDate.classList.remove('d-none');
+            startDate.required = true;
+            endDate.required = true;
+        }
+    }
+
+    modeSelect.addEventListener('change', updateDateInputs);
+    document.addEventListener('DOMContentLoaded', updateDateInputs);
+</script>
 
 </html>
