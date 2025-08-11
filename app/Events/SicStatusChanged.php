@@ -17,7 +17,7 @@ class SicStatusChanged
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(public SafetyObservation $so, string $oldStatus, string $newStatus, ?string $note = null)
     {
         //
     }

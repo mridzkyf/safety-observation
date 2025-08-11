@@ -17,10 +17,7 @@ class SoSubmitted
     /**
      * Create a new event instance.
      */
-    public function __construct()
-    {
-        //
-    }
+public function __construct(public SafetyObservation $so) {}
 
     /**
      * Get the channels the event should broadcast on.

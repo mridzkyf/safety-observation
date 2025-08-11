@@ -17,7 +17,7 @@ class SoOpenedAndAssignedSic
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(public SafetyObservation $so, \App\Models\User $sicUser)
     {
         //
     }
