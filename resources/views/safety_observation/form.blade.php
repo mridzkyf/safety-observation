@@ -17,7 +17,8 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
-                            text: @json(session('success')),
+                            // text: @json(session('success')),
+                            text: 'Form berhasil dikirim, mohon menunggu progres selanjutnya!',
                             confirmButtonColor: '#3085d6'
                         });
                     });

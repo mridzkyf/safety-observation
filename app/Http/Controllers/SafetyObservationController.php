@@ -7,6 +7,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\SoSubmitted; // <-- import event
 
 class SafetyObservationController extends Controller
 {
@@ -158,9 +159,18 @@ public function laporanSaya(Request $request)
         }
     }
 
+            // Tambahkan status default untuk notifikasi
+        $data['status'] = 'open';
+
         SafetyObservation::create($data);
+         // Simpan SO
+        $so = SafetyObservation::create($data);
+        // === INI KUNCI LANGKAH 5: panggil event ===
+        event(new SoSubmitted($so));
         return redirect()->back()->with('success', 'Form berhasil dikirim!');
     }
+
+
     public function show($id)
 {
     $item = SafetyObservation::findOrFail($id);

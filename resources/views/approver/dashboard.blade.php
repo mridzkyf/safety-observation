@@ -25,7 +25,7 @@
             </a>
         </div>
 
-        {{-- card 5 --}}
+        {{-- card 2 --}}
         <div class="dashboard-card">
             <img src="{{ asset('argon/img/alert.png') }}" alt="Analysis Icon">
             <h4>List Laporan Divisi</h4>
@@ -34,7 +34,7 @@
             </a>
         </div>
 
-        {{-- card 5 --}}
+        {{-- card 3 --}}
         <div class="dashboard-card">
             <img src="{{ asset('argon/img/MSDS.png') }}" alt="Analysis Icon">
             <h4>Material Safety DataSheet</h4>

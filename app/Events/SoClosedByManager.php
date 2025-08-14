@@ -2,24 +2,32 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
+use App\Models\SafetyObservation;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SoClosedByManager
+class SoClosedByManager extends Mailable
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use SerializesModels, Queueable;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public SafetyObservation $so)
+    use Queueable, SerializesModels;
+
+    public $so;
+
+    public function __construct(SafetyObservation $so)
     {
-        //
+        $this->so = $so;
+    }
+
+    public function build()
+    {
+        return $this->subject('Safety Observation Closed')
+                    ->view('emails.so_closed')
+                    ->with(['so' => $this->so]);
     }
 
     /**

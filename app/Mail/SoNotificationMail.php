@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\SafetyObservation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,7 +23,7 @@ class SoNotificationMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->subject($this->subjectText)
-            ->markdown('emails.so_notification')
+            ->markdown('emails.so_notification_custom')
             ->with([
                 'so' => $this->so,
                 'x'  => $this->context,

@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\SafetyObservation; 
 
 class SoOpenedAndAssignedSic
 {
@@ -17,7 +18,7 @@ class SoOpenedAndAssignedSic
     /**
      * Create a new event instance.
      */
-    public function __construct(public SafetyObservation $so, \App\Models\User $sicUser)
+    public function __construct(public SafetyObservation $observation)
     {
         //
     }

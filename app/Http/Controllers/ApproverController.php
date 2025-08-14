@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SafetyObservation;
+use App\Events\SoClosedByManager;
 use App\Models\User;
 use App\Models\Area;
 
@@ -164,16 +165,17 @@ class ApproverController extends Controller
 
 
 public function approve(Request $request, $id)
-{
+{   
     $request->validate([
         'area_id' => 'required|exists:areas,id',
     ]);
+    $r = $request;
 
     $observation = SafetyObservation::findOrFail($id);
     $observation->area_id = $request->area_id;
     $observation->status = 'open';
     $observation->save();
-
+    event(new \App\Events\SoOpenedAndAssignedSic($observation));
     return redirect()->route('approver.temuan')->with('success', 'Laporan telah di-approve dan diteruskan ke SIC.');
 }
 
@@ -197,7 +199,8 @@ public function updateStatusTerlapor(Request $request, $id)
 
     return redirect()->back()->with('success', 'Status berhasil diperbarui.');
 }
-public function close($id)
+
+public function close($id, Request $r)
 {
     $observation = SafetyObservation::findOrFail($id);
 
@@ -208,6 +211,7 @@ public function close($id)
 
     $observation->status = 'closed';
     $observation->save();
+    event(new \App\Events\SoClosedByManager($observation));
 
     return redirect()->back()->with('success', 'Laporan telah ditandai sebagai CLOSED.');
 }

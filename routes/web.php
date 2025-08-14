@@ -77,11 +77,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/approver/close/{id}', [ApproverController::class, 'close'])->name('approver.close');
 
 });
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/laporan-saya', [SafetyObservationController::class, 'laporanSaya'])->name('user.laporan');
     Route::get('/user/detail/{id}/{source?}', [SafetyObservationController::class, 'show'])->name('user.userdetail');
 });
-
 
 // Form Safety Observation (untuk user biasa)
 Route::get('/safety-observation/form', [SafetyObservationController::class, 'create'])->name('safety-observation.form');

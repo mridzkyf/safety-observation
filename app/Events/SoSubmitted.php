@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Events;
-
+use App\Models\SafetyObservation;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
