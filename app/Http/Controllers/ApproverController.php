@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SafetyObservation;
 use App\Events\SoClosedByManager;
+use App\Events\SicStatusChanged;
 use App\Models\User;
 use App\Models\Area;
 
@@ -188,17 +189,25 @@ public function updateStatusTerlapor(Request $request, $id)
     ]);
 
     $observation = SafetyObservation::findOrFail($id);
-
+    $old = $observation->status;
+    $new = $request->status;
     // Validasi: hanya SIC yang ditunjuk yang bisa update
     if ($observation->area_id !== auth()->user()->area_id) {
         abort(403, 'Unauthorized');
     }
 
-    $observation->status = $request->status;
+    if ($old === $new) {
+        return back()->with('info', 'Status tidak berubah.');
+    }
+
+    $observation->status = $new;
     $observation->save();
+    event(new SicStatusChanged($observation, $old, $new));
 
     return redirect()->back()->with('success', 'Status berhasil diperbarui.');
 }
+
+
 
 public function close($id, Request $r)
 {

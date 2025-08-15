@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\SafetyObservation;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,10 +18,12 @@ class SicStatusChanged
     /**
      * Create a new event instance.
      */
-    public function __construct(public SafetyObservation $so, string $oldStatus, string $newStatus, ?string $note = null)
-    {
-        //
-    }
+    public function __construct(
+        public SafetyObservation $so,
+        public string $oldStatus,
+        public string $newStatus,
+        public ?string $note = null,
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.

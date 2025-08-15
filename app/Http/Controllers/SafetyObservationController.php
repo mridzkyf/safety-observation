@@ -162,7 +162,7 @@ public function laporanSaya(Request $request)
             // Tambahkan status default untuk notifikasi
         $data['status'] = 'open';
 
-        SafetyObservation::create($data);
+        // SafetyObservation::create($data);
          // Simpan SO
         $so = SafetyObservation::create($data);
         // === INI KUNCI LANGKAH 5: panggil event ===

@@ -83,7 +83,7 @@
                                 <tr>
                                     <td style="color:{{ $muted }};font:600 13px/1.4 system-ui;">Area (SIC)</td>
                                     <td style="font:500 14px/1.5 system-ui;color:#111;">
-                                        {{ optional($so->area)->nama ?? $so->area_id }}</td>
+                                        {{ optional($so->area)->name ?? $so->area_id }}</td>
                                 </tr>
                                 <tr>
                                     <td style="color:{{ $muted }};font:600 13px/1.4 system-ui;">Status</td>
