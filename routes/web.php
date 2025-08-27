@@ -99,6 +99,7 @@ Route::get('/chart/data/pie', [ChartController::class, 'pieData']);
 Route::get('/chart/data/pieStatus', [ChartController::class, 'pieDataStatus']);
 Route::get('/chart/data/bar-area', [ChartController::class, 'barByAreaData']);
 Route::get('/chart/data/pie-seksi', [ChartController::class, 'pieSeksiData']);
+Route::get('/chart/data/line-temuan', [ChartController::class, 'lineJenisTemuanData']);
 Route::get('/analisis/pie', [ChartController::class, 'pieView'])->name('analisis.pie');
 
 //untuk export data Excel

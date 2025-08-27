@@ -58,7 +58,8 @@
                         <td class="p-24" style="padding:24px 24px 8px 24px;">
                             <div
                                 style="font:700 20px/1.3 system-ui,Segoe UI,Roboto,Arial;color:#1b1f24;margin-bottom:12px;">
-                                {{ $x['headline'] ?? 'Notifikasi SO' }}
+                                {{-- {{ $x['headline'] ?? 'Notifikasi SO' }} --}}
+                                {{ is_array($x ?? null) ? $x['headline'] ?? 'Notifikasi SO' : 'Notifikasi SO' }}
                             </div>
 
                             <table role="presentation" cellpadding="0" cellspacing="0" width="100%"
@@ -106,10 +107,13 @@
 
                             <!-- CTA -->
                             <div style="margin:24px 0 0 0;">
-                                <a class="btn" href="{{ $x['cta_url'] ?? url('/so/' . $so->id) }}"
+                                {{-- <a class="btn" href="{{ $x['cta_url'] ?? url('/so/' . $so->id) }}" --}}
+                                <a class="btn"
+                                    href="{{ is_array($x ?? null) && !empty($x['cta_url']) ? $x['cta_url'] : url('/so/' . $so->id) }}"
                                     style="background:{{ $brandColor }};color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px;font:600 14px/1 system-ui;display:inline-block;">
                                     {{ $x['cta_text'] ?? 'Lihat Detail' }}
                                 </a>
+
                             </div>
                         </td>
                     </tr>

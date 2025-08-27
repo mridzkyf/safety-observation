@@ -108,6 +108,64 @@ public function barByAreaData(Request $request)
         'unsafeConditions' => $unsafeConditions
     ]);
 }
+
+public function lineJenisTemuanData(Request $request)
+{
+    $query = DB::table('safety_observations');
+
+    // Filter berdasarkan range tanggal
+    if ($request->filterMode === 'range') {
+        $query->whereBetween('tanggal_pelaporan', [$request->startDate, $request->endDate]);
+    }
+
+    if ($request->filterMode === 'single') {
+        $query->whereDate('tanggal_pelaporan', $request->singleDate);
+    }
+
+    if ($request->has('area_id') && $request->area_id !== 'all') {
+        $query->where('area_id', $request->area_id);
+    }
+
+    // Filter area_id (jika ada)
+    if ($request->has('area_id') && $request->area_id !== 'all') {
+        $query->where('area_id', $request->area_id);
+    }
+
+    $data = $query
+        ->select('jenis_temuan', DB::raw('DATE(tanggal_pelaporan) as tanggal'), DB::raw('COUNT(*) as jumlah'))
+        ->groupBy('jenis_temuan', DB::raw('DATE(tanggal_pelaporan)'))
+        ->orderBy('tanggal')
+        ->get();
+
+    $grouped = [];
+
+    foreach ($data as $row) {
+        $grouped[$row->jenis_temuan][$row->tanggal] = $row->jumlah;
+    }
+
+    $tanggalList = collect($data)->pluck('tanggal')->unique()->sort()->values();
+
+    $datasets = [];
+    $colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#009688', '#795548'];
+
+    $i = 0;
+    foreach ($grouped as $jenis => $values) {
+        $datasets[] = [
+            'label' => $jenis,
+            'data' => $tanggalList->map(fn($tgl) => $values[$tgl] ?? 0)->toArray(),
+            'borderColor' => $colors[$i % count($colors)],
+            'fill' => false,
+            'tension' => 0.4
+        ];
+        $i++;
+    }
+
+    return response()->json([
+        'labels' => $tanggalList,
+        'datasets' => $datasets
+    ]);
+}
+
     public function pieView()
     {
         return view('analisis.pie'); // <--- pastikan view ini ada

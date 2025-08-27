@@ -167,6 +167,20 @@
         #filterForm button:hover {
             background-color: #00b3dc;
         }
+
+        #lineJenisTemuanChart {
+            width: 100% !important;
+            height: 500px !important;
+        }
+
+        .fullwidth-barTrend {
+            width: 100%;
+            max-width: unset;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
@@ -178,6 +192,7 @@
             <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
         </a>
 
+        {{-- Grafik Safety Observation --}}
         <div class="table-container">
             <h3 style="color:#032E3D; font-weight:bold;">Grafik Kategori Safety Observation</h3>
             <form id="filterForm" class="d-flex align-items-center flex-wrap gap-2 mb-3" style="max-width: 700px;">
@@ -224,6 +239,51 @@
             <div class="fullwidth-bar-container">
                 <div class="fullwidth-bar">
                     <canvas id="barChartByArea" height="500"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- Grafik trend --}}
+        <div class="table-container">
+            <h3 style="color:#032E3D; font-weight:bold;">Trend Temuan Safety Observation</h3>
+            <form id="filterLineChart" class="d-flex align-items-center flex-wrap gap-2 mb-3" style="max-width: 800px;">
+                <!-- Mode Tanggal -->
+                <select id="lineFilterMode" name="lineFilterMode" class="form-select form-select-sm"
+                    style="width: 150px;">
+                    <option value="all">Semua Tanggal</option>
+                    <option value="single">Tanggal Tertentu</option>
+                    <option value="range">Range Tanggal</option>
+                </select>
+
+                <!-- Tanggal Tunggal -->
+                <input type="date" id="lineSingleDate" class="form-control form-control-sm"
+                    style="width: 150px; display: none;" />
+
+                <!-- Range Tanggal -->
+                <input type="date" id="lineStartDate" class="form-control form-control-sm"
+                    style="width: 150px; display: none;" />
+                <span id="lineDateSeparator" style="display: none; color: #032E3D; font-weight: bold;">s/d</span>
+                <input type="date" id="lineEndDate" class="form-control form-control-sm"
+                    style="width: 150px; display: none;" />
+
+                <!-- Area (Seksi) -->
+                <select id="lineAreaId" name="lineAreaId" class="form-select form-select-sm" style="width: 180px;">
+                    <option value="all">Semua Seksi</option>
+                    @foreach (App\Models\Area::all() as $area)
+                        <option value="{{ $area->id }}">{{ $area->name }}</option>
+                    @endforeach
+                </select>
+
+                <!-- Tombol -->
+                <button type="submit" class="btn btn-sm"
+                    style="background-color: #00CFFF; color: black; font-weight: bold; padding: 4px 12px;">
+                    <i class="fas fa-filter"></i> Tampilkan Grafik
+                </button>
+            </form>
+
+            <div class="fullwidth-bar-container">
+                <div class="fullwidth-barTrend">
+                    <canvas id="lineJenisTemuanChart" height="450"></canvas>
                 </div>
             </div>
         </div>
@@ -457,6 +517,100 @@
             document.getElementById('startDate').style.display = (mode === 'range') ? 'inline-block' : 'none';
             document.getElementById('endDate').style.display = (mode === 'range') ? 'inline-block' : 'none';
             document.getElementById('dateSeparator').style.display = (mode === 'range') ? 'inline-block' : 'none';
+        });
+
+
+        // ==================================GRAFIK TREND========================
+        // ==================================GRAFIK TREND========================
+        // ==================================GRAFIK TREND========================
+        // ==================================GRAFIK TREND========================
+        // Grafik Trend
+        document.getElementById('filterLineChart').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const mode = document.getElementById('lineFilterMode').value;
+            const areaId = document.getElementById('lineAreaId').value;
+            let query = `?filterMode=${mode}&area_id=${areaId}`;
+
+            if (mode === 'single') {
+                const date = document.getElementById('lineSingleDate').value;
+                query += `&singleDate=${date}`;
+            } else if (mode === 'range') {
+                const start = document.getElementById('lineStartDate').value;
+                const end = document.getElementById('lineEndDate').value;
+                query += `&startDate=${start}&endDate=${end}`;
+            }
+
+            fetchLineChartData(query);
+        });
+
+
+        // Fungsi ambil data line chart
+        function fetchLineChartData(query) {
+            fetch("{{ url('/chart/data/line-temuan') }}" + query)
+                .then(res => res.json())
+                .then(data => {
+                    const ctx = document.getElementById('lineJenisTemuanChart').getContext('2d');
+                    if (window.lineChartTemuan) window.lineChartTemuan.destroy();
+
+                    window.lineChartTemuan = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.labels,
+                            datasets: data.datasets
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Trend Jenis Temuan Berdasarkan Waktu'
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Tanggal'
+                                    },
+                                    ticks: {
+                                        maxRotation: 60,
+                                        minRotation: 45
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Jumlah Temuan'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+        document.getElementById('lineFilterMode').addEventListener('change', function() {
+            const mode = this.value;
+            document.getElementById('lineSingleDate').style.display = (mode === 'single') ? 'inline-block' :
+                'none';
+            document.getElementById('lineStartDate').style.display = (mode === 'range') ? 'inline-block' :
+                'none';
+            document.getElementById('lineEndDate').style.display = (mode === 'range') ? 'inline-block' : 'none';
+            document.getElementById('lineDateSeparator').style.display = (mode === 'range') ? 'inline-block' :
+                'none';
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set default nilai dropdown dan input
+            document.getElementById('lineFilterMode').value = 'all';
+            document.getElementById('lineAreaId').value = 'all';
+
+            // Tampilkan grafik default (semua data, semua seksi)
+            fetchLineChartData("?filterMode=all&area_id=all");
         });
     </script>
 </body>

@@ -1,6 +1,29 @@
 @php
-    $brandColor = '#E43636'; // warna brand untuk management
+    // $brandColor = '#E43636'; // warna brand untuk management
     $muted = '#6c757d';
+    // Mapping warna berdasarkan status
+    switch (strtolower($newStatus)) {
+        case 'closed':
+            $brandColor = '#28a745'; // hijau
+            $statusBg = '#d4edda'; // hijau muda
+            $statusTxt = '#155724'; // teks hijau tua
+            break;
+        case 'on_progress':
+            $brandColor = '#fd7e14'; // oranye
+            $statusBg = '#ffe5d0'; // oranye muda
+            $statusTxt = '#843c0c'; // teks oranye tua
+            break;
+        case 'pending':
+            $brandColor = '#ffc107'; // kuning
+            $statusBg = '#fff3cd'; // kuning muda
+            $statusTxt = '#856404'; // teks kuning tua
+            break;
+        default:
+            $brandColor = '#78C841'; // default hijau brand MFI
+            $statusBg = '#e2e3e5'; // abu
+            $statusTxt = '#383d41'; // teks abu tua
+            break;
+    }
 @endphp
 <!doctype html>
 <html lang="id">
@@ -8,7 +31,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Status SO Bawahan Diperbarui</title>
+    <title>Status SO Anggota Diperbarui</title>
     <style>
         @media (max-width: 600px) {
             .container {

@@ -197,6 +197,7 @@
                 {{-- Upload --}}
                 <div class="mb-4">
                     <label class="form-label">Upload Foto</label>
+                    <span id="fotoRequiredMark" style="color:#e00">*</span>
                     <input type="file" name="bukti_gambar" id="foto" class="form-control"
                         accept=".jpeg,.jpg,.png">
                 </div>
@@ -277,6 +278,8 @@
                     const tindakan = document.querySelector('input[name="tindakan"]:checked');
                     const fotoInput = document.getElementById('foto');
                     const foto = fotoInput ? fotoInput.files.length : 0;
+                    const kategoriChecked = document.querySelector('input[name="kategori"]:checked');
+                    const isUnsafeAct = kategoriChecked && kategoriChecked.value.toLowerCase() === 'unsafe act';
 
                     if (!jenisTemuan || !situasi || !tindakan) {
                         e.preventDefault();
@@ -314,7 +317,7 @@
                         }
                     }
 
-                    if (foto === 0) {
+                    if (!isUnsafeAct && foto === 0) {
                         e.preventDefault();
                         Swal.fire({
                             icon: 'warning',

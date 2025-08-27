@@ -118,7 +118,7 @@ public function laporanSaya(Request $request)
             'sub_posisi' => 'nullable',
             'situasi' => 'required',
             'tindakan' => 'required',
-            'bukti_gambar' => 'required|nullable|image|mimes:jpeg,png,jpg|max:20480',
+            'bukti_gambar' => 'required_unless:kategori,Unsafe Act|nullable|image|mimes:jpeg,png,jpg|max:20480',
         ]);
     $jenis = $request->jenis_temuan;
     $subFieldMap = [

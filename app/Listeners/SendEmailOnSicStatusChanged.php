@@ -47,7 +47,7 @@ class SendEmailOnSicStatusChanged
                 $subject,
                 $so,
                 [
-                    'headline' => 'Status SO Bawahan Diperbarui',
+                    'headline' => 'Status SO Anggota Seksi Diperbarui',
                     'message'  => "Status SO dari {$so->nama} ({$so->email}) berubah: {$old} ➜ {$new}.",
                     'cta_text' => 'Buka SO',
                     'cta_url'  => url("/approver/so/{$so->id}"),
