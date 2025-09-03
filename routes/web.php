@@ -110,4 +110,26 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/manager/export-terlapor', [ExportController::class, 'exportManagerTerlapor'])->name('manager.export.terlapor');
 });
+
+// routes/web.php
+Route::get('/preview-email-mgmt', function () {
+    $so = \App\Models\SafetyObservation::latest()->first();
+    return view('emails.sic_status_changed_management', [
+        'so'        => $so,
+        'oldStatus' => 'open',
+        'newStatus' => 'closed', // coba: PENDING / CLOSED
+        'note'      => 'Contoh catatan',
+    ]);
+});
+
+Route::get('/preview-email-reporter', function () {
+    $so = \App\Models\SafetyObservation::latest()->first();
+    return view('emails.sic_status_changed_pelapor', [
+        'so'        => $so,
+        'oldStatus' => 'open',
+        'newStatus' => 'pending', // coba: PENDING / CLOSED
+        'note'      => 'Contoh catatan',
+    ]);
+});
+
 require __DIR__.'/auth.php';

@@ -85,20 +85,11 @@
                                     <td style="color:{{ $muted }};font:600 13px/1.4 system-ui;">Status</td>
                                     <td>
                                         <span
-                                            style="font:700 12px/1.2 system-ui;color:#721c24;background:#f8d7da;display:inline-block;padding:6px 10px;border-radius:999px;text-transform:uppercase;">
+                                            style="font:700 12px/1.2 system-ui;color:#78C841;background:#f8d7da;display:inline-block;padding:6px 10px;border-radius:999px;text-transform:uppercase;">
                                             {{ $statusTxt }}
                                         </span>
                                     </td>
                                 </tr>
-                                @if (!empty($so->alasan_close))
-                                    <tr>
-                                        <td
-                                            style="color:{{ $muted }};font:600 13px/1.4 system-ui;vertical-align:top;">
-                                            Alasan Penutupan</td>
-                                        <td style="font:400 14px/1.6 system-ui;color:#111;">{{ $so->alasan_close }}
-                                        </td>
-                                    </tr>
-                                @endif
                             </table>
 
                             <p style="margin:16px 0 0 0;font:400 14px/1.6 system-ui;color:#111;">

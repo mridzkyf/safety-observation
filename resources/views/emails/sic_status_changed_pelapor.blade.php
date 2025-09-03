@@ -1,6 +1,7 @@
 @php
     // $brandColor = '#78C841'; // warna brand MFI
     $muted = '#6c757d';
+    $statusKey = str_replace(' ', '_', strtolower(trim($newStatus ?? '')));
     // Mapping warna berdasarkan status
     switch (strtolower($newStatus)) {
         case 'closed':
@@ -24,6 +25,34 @@
             $statusTxt = '#383d41'; // teks abu tua
             break;
     }
+    switch ($statusKey) {
+        case 'closed':
+            $brandColor = '#28a745';
+            $statusBg = '#d4edda';
+            $statusTxt = '#155724';
+            break;
+        case 'on_progress':
+            $brandColor = '#fd7e14';
+            $statusBg = '#ffe5d0';
+            $statusTxt = '#843c0c';
+            break;
+        case 'pending':
+            $brandColor = '#ffc107';
+            $statusBg = '#fff3cd';
+            $statusTxt = '#856404';
+            break;
+        case 'open': // opsional: kalau ingin beda warna saat OPEN
+            $brandColor = '#17a2b8';
+            $statusBg = '#d1ecf1';
+            $statusTxt = '#0c5460';
+            break;
+        default:
+            $brandColor = '#78C841';
+            $statusBg = '#e2e3e5';
+            $statusTxt = '#383d41';
+            break;
+    }
+    $statusLabel = str_replace('_', ' ', strtoupper($statusKey ?: 'UNKNOWN'));
 @endphp
 <!doctype html>
 <html lang="id">
@@ -77,6 +106,13 @@
                             <table cellpadding="0" cellspacing="0" width="100%"
                                 style="border-collapse:separate;border-spacing:0 8px;">
                                 <tr>
+                                    <td style="width:160px;color:{{ $muted }};font:600 13px/1.4 system-ui;">Nama
+                                        Pelapor
+                                    </td>
+                                    <td style="font:500 14px/1.5 system-ui;color:#111;">
+                                        {{ $so->nama ?? $so->nama }}</td>
+                                </tr>
+                                <tr>
                                     <td style="width:160px;color:{{ $muted }};font:600 13px;">Judul</td>
                                     <td style="font:500 14px;color:#111;">{{ $so->judul_temuan ?? $so->judul }}</td>
                                 </tr>
@@ -92,13 +128,27 @@
                                     <td style="color:{{ $muted }};font:600 13px;">Seksi</td>
                                     <td>{{ $so->nama_seksi }}</td>
                                 </tr>
-                                @if (!empty($note))
-                                    <tr>
-                                        <td style="color:{{ $muted }};font:600 13px;vertical-align:top;">Catatan
-                                        </td>
-                                        <td>{{ $note }}</td>
-                                    </tr>
-                                @endif
+                                <tr>
+                                    <td style="color:{{ $muted }};font:600 13px/1.4 system-ui;">Area (SIC)</td>
+                                    <td style="font:500 14px/1.5 system-ui;color:#111;">
+                                        {{ optional($so->area)->name ?? $so->area_id }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color:{{ $muted }};font:600 13px/1.4 system-ui;">Status</td>
+                                    <td>
+                                        <span
+                                            style="
+                                                    font:700 12px/1.2 system-ui;
+                                                    color:{{ $statusTxt }};
+                                                    background:{{ $statusBg }};
+                                                    display:inline-block;
+                                                    padding:6px 10px;
+                                                    border-radius:999px;
+                                                    text-transform:uppercase;">
+                                            {{ $statusLabel }} {{-- pakai $statusLabel / atau langsung {{ $newStatus }} --}}
+                                        </span>
+                                    </td>
+                                </tr>
                             </table>
 
                             <div style="margin:24px 0 0 0;">
