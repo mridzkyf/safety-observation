@@ -16,7 +16,8 @@ class SicStatusChangedReporterMail extends Mailable implements ShouldQueue
         public SafetyObservation $so,
         public string $oldStatus,
         public string $newStatus,
-        public ?string $note = null
+        public ?string $note = null,
+        public ?string $keterangan_status = null
     ) {}
 
     public function build()
@@ -28,6 +29,7 @@ class SicStatusChangedReporterMail extends Mailable implements ShouldQueue
                 'oldStatus' => strtoupper($this->oldStatus ?: 'WAITING'),
                 'newStatus' => strtoupper($this->newStatus),
                 'note'      => $this->note,
+                'keterangan_status'=> $this->keterangan_status,
             ]);
     }
 }

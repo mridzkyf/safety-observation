@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background-color: #032E3D;
@@ -206,9 +207,12 @@
                                         class="btn btn-primary">Lihat Detail</a>
                                 </td>
                                 <td>
-                                    <form action="{{ route('approver.terlapor.update', $item->id) }}" method="POST">
+                                    <form action="{{ route('approver.terlapor.update', $item->id) }}" method="POST"
+                                        enctype="multipart/form-data" class="form-status-update"
+                                        data-kategori="{{ $item->kategori }}">
                                         @csrf
-                                        <select name="status" class="form-select" required>
+                                        <input type="hidden" name="kategori" value="{{ $item->kategori }}">
+                                        <select name="status" class="form-select status-select" required>
                                             <option value="">Pilih</option>
                                             <option value="on_progress">On Progress</option>
                                             <option value="pending">Pending</option>
@@ -388,6 +392,84 @@
 
     modeSelect.addEventListener('change', updateDateInputs);
     document.addEventListener('DOMContentLoaded', updateDateInputs);
+
+    // Pop-up keterangan & upload bukti selesai (kalau closed)
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".form-status-update").forEach(function(form) {
+            form.addEventListener("submit", async function(e) {
+                const status = form.querySelector(".status-select").value;
+                const kategori = form.querySelector("input[name='kategori']").value;
+
+                if (status) {
+                    e.preventDefault();
+
+                    // 1. Popup keterangan (selalu muncul untuk semua status)
+                    const {
+                        value: keterangan,
+                        isConfirmed
+                    } = await Swal.fire({
+                        title: "Ubah Status",
+                        input: "textarea",
+                        inputPlaceholder: "Tuliskan keterangan status...",
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return "Keterangan wajib diisi!";
+                            }
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: "Lanjutkan"
+                    });
+
+                    if (!isConfirmed) return;
+
+                    const formData = new FormData(form);
+                    formData.append("keterangan_status", keterangan);
+
+                    // 2. Kalau status = closed → cek kategori
+                    if (status === "closed" && kategori !== "Unsafe Act") {
+                        const {
+                            value: file,
+                            isConfirmed: uploadConfirmed
+                        } = await Swal.fire({
+                            title: "Upload Bukti Perbaikan",
+                            text: "Harap upload foto bukti perbaikan sebelum menutup SO.",
+                            input: "file",
+                            inputAttributes: {
+                                accept: "image/*",
+                                "aria-label": "Upload foto bukti perbaikan"
+                            },
+                            showCancelButton: true,
+                            confirmButtonText: "Upload & Close",
+                            inputValidator: (file) => {
+                                if (!file) {
+                                    return "Foto bukti wajib diupload";
+                                }
+                            }
+                        });
+
+                        if (!uploadConfirmed) return;
+                        formData.append("bukti_selesai", file);
+                    }
+
+                    // 3. Submit ke server
+                    fetch(form.action, {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then((res) => {
+                            if (!res.ok) throw new Error("Gagal simpan");
+                            Swal.fire("Sukses!", "Status berhasil diperbarui.",
+                                    "success")
+                                .then(() => location.reload());
+                        })
+                        .catch(() => {
+                            Swal.fire("Error", "Terjadi kesalahan saat simpan.",
+                                "error");
+                        });
+                }
+            });
+        });
+    });
 </script>
 
 </html>

@@ -114,7 +114,9 @@
 
         <div class="detail-item"><strong>Situasi / Kejadian:</strong> {{ $observation->situasi }}</div>
         <div class="detail-item"><strong>Tindakan yang Sudah Dilakukan:</strong> {{ $observation->tindakan }}</div>
+        <div class="detail-item"><strong>Keterangan Status:</strong> {{ $observation->keterangan_status ?? '-' }}</div>
 
+        {{-- Bukti gambar temuan --}}
         <div class="detail-item"><strong>Bukti Foto Temuan:</strong></div>
         @if ($observation->bukti_gambar)
             <div class="image-preview"> <img src="{{ asset('storage/' . $observation->bukti_gambar) }}"
@@ -131,6 +133,31 @@
             </div>
         @else
             <p class="text-muted"><em>Tidak ada gambar</em></p>
+        @endif
+
+        {{-- Bukti gambar selesai --}}
+        <div class="detail-item"><strong>Bukti Foto Perbaikan:</strong></div>
+        @if ($observation->bukti_selesai)
+            <div class="image-preview">
+                <img src="{{ asset('storage/' . $observation->bukti_selesai) }}" alt="Bukti Selesai"
+                    style="max-width: 200px; cursor: pointer;" data-bs-toggle="modal"
+                    data-bs-target="#imageModalSelesai">
+            </div>
+
+            <!-- Modal Bukti Selesai -->
+            <div class="modal fade" id="imageModalSelesai" tabindex="-1" aria-labelledby="imageModalSelesaiLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-body p-0">
+                            <img src="{{ asset('storage/' . $observation->bukti_selesai) }}" class="img-fluid w-100"
+                                alt="Full Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <p class="text-muted"><em>Tidak ada gambar perbaikan</em></p>
         @endif
 
         {{-- untuk penunjukan SIC --}}

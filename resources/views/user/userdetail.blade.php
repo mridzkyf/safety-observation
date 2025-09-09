@@ -108,6 +108,7 @@
             <div class="detail-item"><strong>Situasi / Kejadian:</strong> {{ $item->situasi }}</div>
             <div class="detail-item"><strong>Tindakan yang Sudah Dilakukan:</strong> {{ $item->tindakan }}</div>
 
+            {{-- Bukti gambar temuan --}}
             <div class="detail-item"><strong>Bukti Foto Temuan:</strong></div>
             @if ($item->bukti_gambar)
                 <div class="image-preview"> <img src="{{ asset('storage/' . $item->bukti_gambar) }}" alt="Bukti Gambar"
@@ -124,6 +125,31 @@
                 </div>
             @else
                 <p class="text-muted"><em>Tidak ada gambar</em></p>
+            @endif
+
+            {{-- Bukti gambar selesai --}}
+            <div class="detail-item"><strong>Bukti Foto Perbaikan:</strong></div>
+            @if ($item->bukti_selesai)
+                <div class="image-preview">
+                    <img src="{{ asset('storage/' . $item->bukti_selesai) }}" alt="Bukti Selesai"
+                        style="max-width: 200px; cursor: pointer;" data-bs-toggle="modal"
+                        data-bs-target="#imageModalSelesai">
+                </div>
+
+                <!-- Modal Bukti Selesai -->
+                <div class="modal fade" id="imageModalSelesai" tabindex="-1" aria-labelledby="imageModalSelesaiLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <img src="{{ asset('storage/' . $item->bukti_selesai) }}" class="img-fluid w-100"
+                                    alt="Full Image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <p class="text-muted"><em>Tidak ada gambar perbaikan</em></p>
             @endif
             <hr>
             <div class="mt-4 p-3 rounded" style="background-color: #f1f1f1; color: #032E3D;">

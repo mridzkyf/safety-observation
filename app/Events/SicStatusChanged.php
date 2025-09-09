@@ -23,7 +23,12 @@ class SicStatusChanged
         public string $oldStatus,
         public string $newStatus,
         public ?string $note = null,
-    ) {}
+    ) {
+        $this->so        = $so;
+        $this->oldStatus = $oldStatus;
+        $this->newStatus = $newStatus;
+        $this->note      = $note ?? '';
+    }
 
     /**
      * Get the channels the event should broadcast on.

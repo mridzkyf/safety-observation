@@ -184,9 +184,20 @@ public function approve(Request $request, $id)
 
 public function updateStatusTerlapor(Request $request, $id)
 {
-    $request->validate([
-        'status' => 'required|in:on_progress,pending,closed',
-    ]);
+    // $request->validate([
+    //     'status' => 'required|in:on_progress,pending,closed',
+    // ]);
+
+    $rules = [
+    'status' => 'required|in:on_progress,pending,closed',
+    'keterangan_status' => 'nullable|string|max:1000',
+    ];
+    $observation = SafetyObservation::findOrFail($id);
+        // Kalau status ditutup → bukti_selesai wajib
+    if ($request->status === 'closed' && $observation->kategori !== 'Unsafe Act') {
+        $rules['bukti_selesai'] = 'required|image|mimes:jpg,jpeg,png|max:20480';
+    }
+    $request->validate($rules);
 
     $observation = SafetyObservation::findOrFail($id);
     $old = $observation->status;
@@ -200,9 +211,16 @@ public function updateStatusTerlapor(Request $request, $id)
         return back()->with('info', 'Status tidak berubah.');
     }
 
+        // Simpan bukti_selesai kalau ada
+    if ($request->hasFile('bukti_selesai')) {
+        $path = $request->file('bukti_selesai')->store('bukti_selesai', 'public');
+        $observation->bukti_selesai = $path;
+    }
+
     $observation->status = $new;
+    $observation->keterangan_status = $request->keterangan_status; // simpan free text
     $observation->save();
-    event(new SicStatusChanged($observation, $old, $new));
+    event(new SicStatusChanged($observation, $old, $new, $request->keterangan_status));
 
     return redirect()->back()->with('success', 'Status berhasil diperbarui.');
 }

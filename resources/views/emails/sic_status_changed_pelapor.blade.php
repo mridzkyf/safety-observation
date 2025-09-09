@@ -149,6 +149,13 @@
                                         </span>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td style="color:{{ $muted }};font:600 13px/1.4 system-ui;">Keterangan
+                                        Status</td>
+                                    <td style="font:500 14px/1.5 system-ui;color:#111;">
+                                        {{ $keterangan_status ?? '-' }}
+                                    </td>
+                                </tr>
                             </table>
 
                             <div style="margin:24px 0 0 0;">

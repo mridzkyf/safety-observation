@@ -196,7 +196,7 @@
 
                 {{-- Upload --}}
                 <div class="mb-4">
-                    <label class="form-label">Upload Foto</label>
+                    <label class="form-label">Upload Foto (Diwajibkan untuk temuan Unsafe Condition)</label>
                     <span id="fotoRequiredMark" style="color:#e00">*</span>
                     <input type="file" name="bukti_gambar" id="foto" class="form-control"
                         accept=".jpeg,.jpg,.png">

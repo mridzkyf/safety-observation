@@ -20,7 +20,7 @@ class SendEmailOnSicStatusChanged
         // 1) Pelapor
         if (!empty($so->email)) {
             Mail::to($so->email)->send(
-                new SicStatusChangedReporterMail($so, $oldStatus, $newStatus, $note)
+                new SicStatusChangedReporterMail($so, $oldStatus, $newStatus, $note, $so->keterangan_status)
             );
         }
 
@@ -32,7 +32,7 @@ class SendEmailOnSicStatusChanged
 
         if ($managerEmails) {
             Mail::to($managerEmails)->send(
-                new SicStatusChangedManagementMail($so, $oldStatus, $newStatus, $note)
+                new SicStatusChangedManagementMail($so, $oldStatus, $newStatus, $note, $so->keterangan_status)
             );
         }
     }
