@@ -17,7 +17,9 @@ stages:
 #     - if: '$CI_COMMIT_MESSAGE =~ /\[skip ci\]/'
 #       when: never
     
-
+before_script:
+  - echo "Auto masuk ke project dir: $CI_PROJECT_DIR"
+  - cd $CI_PROJECT_DIR
 version:
   stage: version
   image: registry.gitlab.com/juhani/go-semrel-gitlab:v0.21.1
@@ -44,6 +46,8 @@ deploy:
   script:
     - whoami
     - sudo -u root git -C /var/www/mfi/safety_observation_system pull
+  only:
+    - main
   tags:
     - msds-so
 
