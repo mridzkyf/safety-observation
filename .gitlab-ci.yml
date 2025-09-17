@@ -36,8 +36,8 @@ version:
       - CHANGELOG.md
   only:
     - main
-  tags:
-    - msds-so
+  # tags:
+  #   - msds-so
 
 # deploy:
 #   stage: deploy
