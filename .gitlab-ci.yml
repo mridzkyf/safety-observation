@@ -7,6 +7,15 @@ stages:
 before_script:
   # - echo "Runner start di folder: $(pwd)"
   # - echo "CI_PROJECT_DIR: $CI_PROJECT_DIR"
+  - |
+    if [ ! -d "$CI_PROJECT_DIR/.git" ]; then
+      mkdir -p "$CI_PROJECT_DIR"
+      git clone "$CI_REPOSITORY_URL" "$CI_PROJECT_DIR"
+      cd "$CI_PROJECT_DIR"
+      git checkout "$CI_COMMIT_REF_NAME"
+    else
+      cd "$CI_PROJECT_DIR"
+    fi
   - ls -lah
 
 version:
