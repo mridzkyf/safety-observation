@@ -2,7 +2,7 @@ image: swiguna/quasar:v1.0.0
 
 stages:
   - version 
-#  - deploy
+  - deploy
 
 # Pastikan pipeline hanya dibuat di branch main
 # workflow:
@@ -39,14 +39,13 @@ version:
   # tags:
   #   - msds-so
 
-# deploy:
-#   stage: deploy
-#   script:
-#     - whoami
-#     - cd /
-#     - ./git_pull.sh
-#   tags:
-#     - gcp
+deploy:
+  stage: deploy
+  script:
+    - whoami
+    - sudo -u root git -C /var/www/mfi/safety_observation_system pull
+  tags:
+    - msds-so
 
 # deploy-prod:
 #   stage: deploy
