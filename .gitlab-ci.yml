@@ -1,0 +1,57 @@
+image: swiguna/quasar:v1.0.0
+
+stages:
+  - version 
+#  - deploy
+
+# Pastikan pipeline hanya dibuat di branch main
+# workflow:
+#   rules:
+#     - if: '$CI_PIPELINE_SOURCE == "api"'
+#       when: never
+#     - if: $CI_COMMIT_BRANCH == "main"
+#       when: always
+#     - if: $CI_COMMIT_TAG           
+#       when: always
+#     - when: never
+#     - if: '$CI_COMMIT_MESSAGE =~ /\[skip ci\]/'
+#       when: never
+    
+
+version:
+  stage: version
+  image: registry.gitlab.com/juhani/go-semrel-gitlab:v0.21.1
+  variables:
+    GSG_TAG_PREFIX: "main"
+  services: []
+  script:
+    - ls -l
+    - release next-version --allow-current > .next-version
+    - release changelog
+    - cat .next-version
+    - release commit-and-tag CHANGELOG.md
+  artifacts:
+    paths:
+      - .next-version
+      - CHANGELOG.md
+  only:
+    - main
+  tags:
+    - msds-so
+
+# deploy:
+#   stage: deploy
+#   script:
+#     - whoami
+#     - cd /
+#     - ./git_pull.sh
+#   tags:
+#     - gcp
+
+# deploy-prod:
+#   stage: deploy
+#   script:
+#     - cd /
+#     - ./git_pull.sh
+#   tags:
+#     - pbfprod
