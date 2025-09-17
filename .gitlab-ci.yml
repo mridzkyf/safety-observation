@@ -47,7 +47,7 @@ deploy:
   only:
     - main
   tags:
-    - msds-so
+    - so
 
 # deploy-prod:
 #   stage: deploy
