@@ -4,22 +4,9 @@ stages:
   - version 
   - deploy
 
-# Pastikan pipeline hanya dibuat di branch main
-# workflow:
-#   rules:
-#     - if: '$CI_PIPELINE_SOURCE == "api"'
-#       when: never
-#     - if: $CI_COMMIT_BRANCH == "main"
-#       when: always
-#     - if: $CI_COMMIT_TAG           
-#       when: always
-#     - when: never
-#     - if: '$CI_COMMIT_MESSAGE =~ /\[skip ci\]/'
-#       when: never
-    
 before_script:
-  - echo "Auto masuk ke project dir: $CI_PROJECT_DIR"
   - cd $CI_PROJECT_DIR
+  
 version:
   stage: version
   image: registry.gitlab.com/juhani/go-semrel-gitlab:v0.21.1
