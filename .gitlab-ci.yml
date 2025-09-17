@@ -43,7 +43,7 @@ deploy:
   stage: deploy
   script:
     - whoami
-    - sudo -u root git -C /var/www/mfi/safety_observation_system pull
+    - sudo git -C /var/www/mfi/safety_observation_system pull
   only:
     - main
   tags:
