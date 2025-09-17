@@ -5,8 +5,10 @@ stages:
   - deploy
 
 before_script:
-  - cd $CI_PROJECT_DIR
-  
+  # - echo "Runner start di folder: $(pwd)"
+  # - echo "CI_PROJECT_DIR: $CI_PROJECT_DIR"
+  - ls -lah
+
 version:
   stage: version
   image: registry.gitlab.com/juhani/go-semrel-gitlab:v0.21.1
