@@ -1,0 +1,58 @@
+image: swiguna/quasar:v1.0.0
+
+stages:
+  - version 
+  - deploy
+
+before_script:
+  # - echo "Runner start di folder: $(pwd)"
+  # - echo "CI_PROJECT_DIR: $CI_PROJECT_DIR"
+  - |
+    if [ ! -d "$CI_PROJECT_DIR/.git" ]; then
+      mkdir -p "$CI_PROJECT_DIR"
+      git clone "$CI_REPOSITORY_URL" "$CI_PROJECT_DIR"
+      cd "$CI_PROJECT_DIR"
+      git checkout "$CI_COMMIT_REF_NAME"
+    else
+      cd "$CI_PROJECT_DIR"
+    fi
+  - ls -lah
+
+version:
+  stage: version
+  image: registry.gitlab.com/juhani/go-semrel-gitlab:v0.21.1
+  variables:
+    GSG_TAG_PREFIX: "main"
+  services: []
+  script:
+    - ls -l
+    - release next-version --allow-current > .next-version
+    - release changelog
+    - cat .next-version
+    - release commit-and-tag CHANGELOG.md
+  artifacts:
+    paths:
+      - .next-version
+      - CHANGELOG.md
+  only:
+    - main
+  # tags:
+  #   - msds-so
+
+deploy:
+  stage: deploy
+  script:
+    - whoami
+    - sudo git -C /var/www/mfi/safety_observation_system pull
+  only:
+    - main
+  tags:
+    - so
+
+# deploy-prod:
+#   stage: deploy
+#   script:
+#     - cd /
+#     - ./git_pull.sh
+#   tags:
+#     - pbfprod
