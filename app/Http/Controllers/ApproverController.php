@@ -220,7 +220,7 @@ public function updateStatusTerlapor(Request $request, $id)
     $observation->status = $new;
     $observation->keterangan_status = $request->keterangan_status; // simpan free text
     $observation->save();
-    event(new SicStatusChanged($observation, $old, $new, $request->keterangan_status));
+    // event(new SicStatusChanged($observation, $old, $new, $request->keterangan_status));
 
     return redirect()->back()->with('success', 'Status berhasil diperbarui.');
 }

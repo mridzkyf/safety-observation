@@ -90,8 +90,8 @@
 
 <body>
     <div class="dashboard-header">
-        <div class="dashboard-logo"> <img src="{{ asset('argon/img/MFI.png') }}" alt="Logo MFI" /> <span>Safety
-                Observation</span> </div>
+        <div class="dashboard-logo"> <img src="{{ asset('argon/img/MFI.png') }}" alt="Logo MFI" /> <span>SHE
+                Digitalization System</span> </div>
         @if (auth()->check())
             <div style="color: rgb(12, 0, 0); padding: 10px 30px; font-weight: 600;">
                 Selamat datang, {{ auth()->user()->name }} dari {{ auth()->user()->role }} seksi

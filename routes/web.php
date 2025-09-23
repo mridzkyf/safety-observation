@@ -8,6 +8,8 @@ use App\Http\Controllers\ChartController;
 use App\Http\Controllers\AdminController;
 use App\Exports\SafetyObservationExport;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\PosterController;
+use App\Models\Poster;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
@@ -132,4 +134,17 @@ Route::get('/preview-email-reporter', function () {
     ]);
 });
 
+//Route untuk landing page poster
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/poster', [PosterController::class, 'index'])->name('admin.poster.index');
+    Route::put('/admin/poster', [PosterController::class, 'update'])->name('admin.poster.update');
+    Route::delete('/admin/poster', [PosterController::class, 'destroy'])->name('admin.poster.destroy');
+});
+
 require __DIR__.'/auth.php';
+
+Route::get('/login', function () {
+    $poster = Poster::latest()->first(); // ambil poster terakhir
+    return view('auth.login', compact('poster'));
+})->name('login');
+

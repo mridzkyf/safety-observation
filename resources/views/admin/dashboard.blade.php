@@ -54,9 +54,18 @@
 
         {{-- card 5 --}}
         <div class="dashboard-card">
+            <img src="{{ asset('argon/img/Poster.png') }}" alt="Analysis Icon">
+            <h4>Media (Poster)</h4>
+            <a href="{{ route('admin.poster.index') }}" class="dashboard-button">
+                Kelola Media <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        {{-- card 6 --}}
+        <div class="dashboard-card">
             <img src="{{ asset('argon/img/MSDS.png') }}" alt="Analysis Icon">
             <h4>Material Safety DataSheet</h4>
-            <a href="#" class="dashboard-button disabled">
+            <a href="http://103.82.240.176:8080/" class="dashboard-button">
                 Buka MSDS <i class="fas fa-arrow-right"></i>
             </a>
         </div>

@@ -18,6 +18,31 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('argon/css/argon-dashboard.css') }}" rel="stylesheet" />
 </head>
+<style>
+    .swal2-popup.poster-popup {
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .swal2-popup.poster-popup .swal2-title {
+        color: #032E3D;
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .swal2-popup.poster-popup .swal2-confirm.btn {
+        background-color: #0A2B33 !important;
+        border-radius: 20px;
+        padding: 8px 25px;
+        font-size: 14px;
+    }
+
+    .swal2-popup.poster-popup .swal2-confirm.btn:hover {
+        background-color: #145c73 !important;
+    }
+</style>
+
 
 <body class="">
     <main class="main-content  mt-0">
@@ -91,6 +116,40 @@
             });
         </script>
     @endif
+    @if ($poster && $poster->file_path)
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    title: 'SHE Buletin',
+                    html: `
+                <div style="
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    padding:10px;
+                    border:2px solid #032E3D;
+                    border-radius:12px;
+                    background:#fff;
+                ">
+                    <img src="{{ asset('storage/' . $poster->file_path) }}" 
+                         alt="Poster"
+                         style="max-width:100%; height:auto; border-radius:10px;">
+                </div>
+            `,
+                    showConfirmButton: true,
+                    confirmButtonText: "Tutup",
+                    customClass: {
+                        popup: 'poster-popup',
+                        confirmButton: 'btn btn-primary'
+                    },
+                    width: '950px',
+                    padding: '1em',
+                    backdrop: `rgba(0,0,0,0.7)`
+                });
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>
