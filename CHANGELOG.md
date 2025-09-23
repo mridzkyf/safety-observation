@@ -2,6 +2,13 @@
 
 <!--- next entry here -->
 
+## 0.2.0
+2025-09-23
+
+### Features
+
+- **pop_up:** penambahan pop up untuk SHE Poster (0888e09be0e0767e38f7ad7cf922dd943c886254)
+
 ## 0.1.6
 2025-09-17
 
