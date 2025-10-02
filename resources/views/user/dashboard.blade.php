@@ -50,6 +50,7 @@
                 Buka MSDS <i class="fas fa-arrow-right"></i>
             </a>
         </div>
+
 </body>
 
 </html>
