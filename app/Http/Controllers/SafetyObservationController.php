@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\SafetyObservation;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Area;
+use App\Models\User;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Events\SoSubmitted; // <-- import event
+use App\Events\SoSubmitted; 
 
 class SafetyObservationController extends Controller
 {
@@ -188,6 +191,49 @@ public function assignArea(Request $request, $id)
     $observation->save();
 
     return back()->with('success', 'Area berhasil ditunjuk sebagai SIC.');
+}
+
+//FOR EDIT USER BY IT SELF
+// Form edit akun user
+public function editAccount()
+{
+    $areas = Area::all();
+    $user = Auth::user();
+    $daftarSeksi = [
+        'ADM','Account & Tax','CA','EI','ENG PET','FT','IFB','IFC','IT','KTF','LOG','MC',
+        'MFG PET','MKT PF','Material Purchasing','Service Purchasing & Vendor Management',
+        'QA & CTS KTF - PF','QC KTF-PF','QQC PET','SHE','TC'
+    ];
+
+    return view('user.edituser', compact('user','daftarSeksi','areas'));
+
+}
+
+// Update akun user
+public function updateAccount(Request $request)
+{
+    $user = Auth::user();
+
+    $request->validate([
+        'name' => 'nullable|string|max:255',
+        'nama_seksi' => 'nullable|string',
+        'area_id' => 'nullable|exists:areas,id',
+        'password' => 'nullable|string|min:8|confirmed',
+        'group' => 'nullable|in:DAY TIME,GROUP A,GROUP B,GROUP C,GROUP D',
+    ]);
+
+    $user->name = $request->name;
+    $user->nama_seksi = $request->nama_seksi;
+    $user->area_id = $request->area_id;
+    $user->group = $request->group;
+
+    if ($request->filled('password')) {
+        $user->password = Hash::make($request->password);
+    }
+
+    $user->save();
+
+    return redirect()->route('user.account.edit')->with('success', 'Akun berhasil diperbarui!');
 }
 
 }

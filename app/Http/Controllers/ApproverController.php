@@ -9,10 +9,11 @@ use App\Events\SoClosedByManager;
 use App\Events\SicStatusChanged;
 use App\Models\User;
 use App\Models\Area;
+use Illuminate\Support\Facades\Hash;
 
 
 
-class ApproverController extends Controller
+class ApproverController extends Controller 
 {
     public function index()
     {
@@ -243,4 +244,55 @@ public function close($id, Request $r)
     return redirect()->back()->with('success', 'Laporan telah ditandai sebagai CLOSED.');
 }
 
+//For edit user management level feature
+    public function editAccount()
+    {
+        $user = Auth::user();
+        $areas = Area::all();
+        $daftarSeksi = [
+        'ADM','Account & Tax','CA','EI','ENG PET','FT','IFB','IFC','IT','KTF','LOG','MC',
+        'MFG PET','MKT PF','Material Purchasing','Service Purchasing & Vendor Management',
+        'QA & CTS KTF - PF','QC KTF-PF','QQC PET','SHE','TC'
+        ];
+
+        // Pastikan hanya role management level yang bisa akses
+        if (!in_array($user->role, ['officer', 'supervisor', 'asistant_manager', 'manager'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        return view('approver.edit', compact('user','daftarSeksi','areas'));
+    }
+
+//For update info user management level
+    public function updateAccount(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!in_array($user->role, ['officer', 'supervisor', 'asistant_manager', 'manager'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:8|confirmed',
+            'nama_seksi' => 'nullable|string',
+            'area_id' => 'nullable|exists:areas,id',
+            'group' => 'nullable|in:DAY TIME,GROUP A,GROUP B,GROUP C,GROUP D',
+        ]);
+
+        $user->name  = $request->name;
+        $user->email = $request->email;
+        $user->nama_seksi = $request->nama_seksi;
+        $user->area_id = $request->area_id;
+        $user->group = $request->group;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('approver.account.edit')->with('success', 'Akun berhasil diperbarui.');
+    }
 }

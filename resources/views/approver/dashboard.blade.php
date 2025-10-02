@@ -36,6 +36,15 @@
 
         {{-- card 3 --}}
         <div class="dashboard-card">
+            <img src="{{ asset('argon/img/akun.png') }}" alt="Analysis Icon">
+            <h4>Akun Saya</h4>
+            <a href="{{ route('approver.account.edit') }}" class="dashboard-button">
+                Kelola Akun <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        {{-- card 4 --}}
+        <div class="dashboard-card">
             <img src="{{ asset('argon/img/MSDS.png') }}" alt="Analysis Icon">
             <h4>Material Safety DataSheet</h4>
             <a href="http://103.82.240.176:8080/" class="dashboard-button">
@@ -43,6 +52,7 @@
             </a>
         </div>
     </div>
+
 
     {{-- <script>
         function toggleDropdown() {

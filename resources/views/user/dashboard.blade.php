@@ -12,7 +12,6 @@
 <body>
 
     <!-- Header -->
-
     @include('layouts.header')
     <!-- Content -->
     <div class="dashboard-container">
@@ -24,6 +23,8 @@
                 Isi Form <i class="fas fa-arrow-right"></i>
             </a>
         </div>
+
+        <!-- Card 2 -->
         <div class="dashboard-card">
             <img src="{{ asset('argon/img/TABEL.png') }}" alt="Form Icon">
             <h4>Riwayat Safety Observation</h4>
@@ -31,7 +32,17 @@
                 Lihat Riwayat <i class="fas fa-arrow-right"></i>
             </a>
         </div>
-        {{-- card 5 --}}
+
+        {{-- card 3 --}}
+        <div class="dashboard-card">
+            <img src="{{ asset('argon/img/akun.png') }}" alt="Analysis Icon">
+            <h4>Akun Saya</h4>
+            <a href="{{ route('user.account.edit') }}" class="dashboard-button">
+                Kelola Akun <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        {{-- card 4 --}}
         <div class="dashboard-card">
             <img src="{{ asset('argon/img/MSDS.png') }}" alt="Analysis Icon">
             <h4>Material Safety DataSheet</h4>

@@ -77,11 +77,11 @@ public function updateUser(Request $request, $id)
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => "required|email|unique:users,email,$id",
-        'nama_seksi' => 'required|string',
-        'group' => 'required|in:DAY TIME,GROUP A,GROUP B,GROUP C,GROUP D',
+        'nama_seksi' => 'nullable|string',
+        'group' => 'nullable|in:DAY TIME,GROUP A,GROUP B,GROUP C,GROUP D',
         'role' => 'required|in:user,officer,supervisor,asistant_manager,manager',
         'area_id' => 'nullable|exists:areas,id',
-        'password' => 'nullable|string|min:6', // password opsional
+        'password' => 'nullable|string|min:8|confirmed', // password opsional
     ]);
 
     $user = User::findOrFail($id);

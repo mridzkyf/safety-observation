@@ -5,6 +5,31 @@ body {
   color: #ffffff;
 }
 
+.dashboard-container {
+  justify-content: center; 
+  display: flex;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.dashboard-card {
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  color: #032E3D;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 330px;
+  width: 250px; 
+}
+
 .dashboard-header {
   background-color: white;
   padding: 15px 30px;
@@ -67,34 +92,6 @@ body {
 .dropdown-menu a:hover {
   background-color: #eee;
 }
-
-.dashboard-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* ubah dari space-around/space-between ke center */
-  gap: 10px; /* atur jarak antar card */
-  max-width: 1000px; /* batasin lebar biar gak terlalu melebar */
-  margin: 0 auto; /* center horizontal di layar */
-  padding: 40px 20px;
-}
-
-
-.dashboard-card {
-  background-color: white;
-  border-radius: 20px; /* gabungan dari 20px & 15px */
-  padding: 20px;
-  width: 260px; /* yang paling besar dari semua */
-  max-width: 300px;
-  margin: auto;
-  text-align: center;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* gunakan versi paling lengkap */
-  color: #032E3D;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 330px; /* ini untuk samakan tinggi antar card */
-}
-
 
 .dashboard-card img {
   width: 100%;
@@ -239,5 +236,19 @@ background-color: #032E3D !important;
 @media (max-width: 768px) {
   .dashboard-card {
     width: 90%;
+  }
+}
+
+/* Tablet: 2 kolom */
+@media (max-width: 992px) {
+  .dashboard-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* HP: 1 kolom */
+@media (max-width: 576px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
   }
 }

@@ -98,7 +98,8 @@
                 {{ auth()->user()->nama_seksi }}
             </div>
             <div class="burger-menu" onclick="toggleDropdown()"> <i class="fas fa-bars"></i> </div>
-            <div id="dropdown-menu" class="dropdown-menu"> <a href="{{ route('profile.edit') }}">Profile</a>
+            <div id="dropdown-menu" class="dropdown-menu">
+                {{-- <a href="{{ route('profile.edit') }}">Profile</a> --}}
                 <form method="POST" action="{{ route('logout') }}"> @csrf <button type="submit">Logout</button>
                 </form>
             </div>

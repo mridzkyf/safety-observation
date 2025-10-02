@@ -15,9 +15,14 @@ use Illuminate\Http\Request;
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+// function sekali saja
+$loginPage = function () {
+    $poster = Poster::latest()->first();
+    return view('auth.login', compact('poster'));
+};
 
 // Redirect user setelah login, tergantung rolenya
 Route::get('/redirect-after-login', function () {
@@ -65,6 +70,16 @@ Route::middleware(['auth'])->group(function () {
         return view('user.dashboard');
     })->name('user.dashboard');
 });
+// User Kelola Akun
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/account', [SafetyObservationController::class, 'editAccount'])->name('user.account.edit');
+    Route::post('/user/account', [SafetyObservationController::class, 'updateAccount'])->name('user.account.update');
+}); 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/approver/account', [ApproverController::class, 'editAccount'])->name('approver.account.edit');
+    Route::post('/approver/account', [ApproverController::class, 'updateAccount'])->name('approver.account.update');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/approver/dashboard', [ApproverController::class, 'index'])->name('approver.dashboard');
@@ -77,7 +92,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/approver/terlapor', [ApproverController::class, 'terlapor'])->name('approver.terlapor');
     Route::post('/approver/terlapor/update-status/{id}', [ApproverController::class, 'updateStatusTerlapor'])->name('approver.terlapor.update');
     Route::post('/approver/close/{id}', [ApproverController::class, 'close'])->name('approver.close');
-
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -143,8 +157,12 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/login', function () {
-    $poster = Poster::latest()->first(); // ambil poster terakhir
-    return view('auth.login', compact('poster'));
-})->name('login');
+// root & login panggil function yang sama
+Route::get('/', $loginPage)->name('root');
+Route::get('/login', $loginPage)->name('login');
+
+// Route::get('/login', function () {
+//     $poster = Poster::latest()->first(); // ambil poster terakhir
+//     return view('auth.login', compact('poster'));
+// })->name('login');
 
