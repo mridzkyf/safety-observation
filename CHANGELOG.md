@@ -2,6 +2,13 @@
 
 <!--- next entry here -->
 
+## 0.3.0
+2025-10-02
+
+### Features
+
+- **edit_user:** penambahan edit user di masing-masing role (79250ebb9343d98d833f358f14b92bc1be35e8d3)
+
 ## 0.2.0
 2025-09-23
 
