@@ -50,6 +50,14 @@
                 Buka MSDS <i class="fas fa-arrow-right"></i>
             </a>
         </div>
+
+        <div class="dashboard-card">
+            <img src="{{ asset('argon/img/MSDS.png') }}" alt="Analysis Icon">
+            <h4>Material Safety DataSheet</h4>
+            <a href="http://103.82.240.176:8080/" class="dashboard-button">
+                Buka MSDS <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
 </body>
 
 </html>
